@@ -8,12 +8,11 @@ import {
 } from "playwright";
 import { chromium } from "playwright-extra";
 import stealth from "puppeteer-extra-plugin-stealth";
-import { nonEmptyString } from "decoders";
 import { join } from "node:path";
 import Zip from "adm-zip";
-import chunk from "lodash/chunk";
 import { existsSync, mkdir, readdir, rm, statSync } from "node:fs";
 import { promisify } from "node:util";
+import chunk from "lodash.chunk";
 
 import "dotenv/config";
 
@@ -73,8 +72,10 @@ type AlbumDetails = {
 
 const getTextValue = async (locator: Locator): Promise<string> => {
   const content = await locator.evaluate((el) => el.firstChild?.textContent);
-  return nonEmptyString.verify(content).trim();
+  if (!content) throw new Error("Invalid content for locator " + locator);
+  return content;
 };
+
 const getAlbumDetails = async (album: Locator): Promise<AlbumDetails> => {
   const title = await getTextValue(
     album.locator(".collection-item-title").first(),
