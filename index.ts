@@ -73,15 +73,15 @@ type AlbumDetails = {
 const getTextValue = async (locator: Locator): Promise<string> => {
   const content = await locator.evaluate((el) => el.firstChild?.textContent);
   if (!content) throw new Error("Invalid content for locator " + locator);
-  return content;
+  return content.trim();
 };
 
 const getAlbumDetails = async (album: Locator): Promise<AlbumDetails> => {
   const title = await getTextValue(
-    album.locator(".collection-item-title").first(),
+    album.locator(".collection-item-title").first()
   );
   const artist = await getTextValue(
-    album.locator(".collection-item-artist").first(),
+    album.locator(".collection-item-artist").first()
   );
   const downloadLink = album.getByRole("link", {
     name: "download",
@@ -100,7 +100,7 @@ const extractZip = (archiveFile: string, targetDir: string) => {
     new Zip(archiveFile).extractAllToAsync(targetDir, true, true, (error) => {
       if (error) reject(error);
       resolve(undefined);
-    }),
+    })
   );
 };
 const getAlbumDir = (album: AlbumDetails) => {
@@ -164,7 +164,7 @@ const main = async () => {
         await downloadAlbum(page, album);
         console.log(`Finished: ${album.artist} - ${album.title}`);
         await page.close();
-      }),
+      })
     );
   }
 

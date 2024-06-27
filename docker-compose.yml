@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  bandcamp-sync:
+    build: .
+    env_file: .env
+    volumes:
+      - R:\shared\media\music:/var/app/output
+      - ./playwright:/var/app/playwright
+    environment:
+      - OUTPUT_DIR=/var/app/output
